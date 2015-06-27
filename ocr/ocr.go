@@ -22,7 +22,6 @@ func loadDictionary(path string) {
 	}
 
 	scanner := bufio.NewScanner(f)
-	// filter dict exact same way, lowercase etc
 
 	for scanner.Scan() {
 		word := scanner.Text()
@@ -55,8 +54,7 @@ func processWord(word string) string {
 }
 
 // regular text has more alpha than non-alpha
-func hasMoreAlphaCharacters(in []string) bool {
-	alpha, nonAlpha := analyzeWords(in)
+func hasMoreAlphaCharacters(alpha int, nonAlpha int) bool {
 	if alpha > nonAlpha {
 		return true
 	}
@@ -83,7 +81,7 @@ func analyzeWords(words []string) (int, int) {
 	return alpha, nonAlpha
 }
 
-func ProcessImage(path string) string {
+func ProcessImage(path string) (int, int, int) {
 	loadDictionary("/usr/share/dict/words")
 
 	text := gosseract.Must(gosseract.Params{Src: path})
@@ -92,29 +90,22 @@ func ProcessImage(path string) string {
 
 	util.Log(fmt.Sprintf("Text: %s\n", text))
 
-	flagged := false
-
-	hasMoreAlpha := hasMoreAlphaCharacters(words)
+	alpha, nonAlpha := analyzeWords(words)
+	hasMoreAlpha := hasMoreAlphaCharacters(alpha, nonAlpha)
 
 	if hasMoreAlpha {
-		util.Log("FLAGGING: hasMoreAlphaCharacters")
-		flagged = true
+		util.Log("hasMoreAlphaCharacters")
 	}
 
 	for _, word := range words {
 		if hasMoreAlpha {
 			if isInDictionary(word) {
-				util.Log(fmt.Sprintf("FLAGGING: isInDictionary: %s\n", word))
-				flagged = true
+				util.Log(fmt.Sprintf("isInDictionary: %s\n", word))
 			}
 		}
 	}
 
-	if flagged {
-		fmt.Printf("%s is BAD\n", path)
-	} else {
-		fmt.Printf("%s is GOOD\n", path)
-	}
+	total := alpha + nonAlpha
 
-	return text
+	return alpha, nonAlpha, total
 }
