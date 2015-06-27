@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/bittersweet/imgfiltrate/color"
@@ -9,13 +11,13 @@ import (
 )
 
 type Result struct {
-	ColorPercentage         float64
-	TotalColors             float64
-	AlphabeticCharacters    int
-	NonAlphabeticCharacters int
-	TotalCharacters         int
-	DictionaryWords         int
-	Advice                  string
+	ColorPercentage         float64 `json:"color_percentage"`
+	TotalColors             float64 `json:"total_colors"`
+	AlphabeticCharacters    int     `json:"alphabetic_characters"`
+	NonAlphabeticCharacters int     `json:"non_alphabetic_characters"`
+	TotalCharacters         int     `json:"total_characters"`
+	DictionaryWords         int     `json:"dictionary_words"`
+	Advice                  string  `json:"advice"`
 }
 
 func processImage(file string) Result {
@@ -51,7 +53,12 @@ func (r *Result) advise() {
 }
 
 func (r *Result) output() {
-	fmt.Printf("%#v\n", r)
+	output, err := json.MarshalIndent(r, "", "  ")
+	if err != nil {
+		log.Fatal("MarshalIndent", err)
+	}
+
+	fmt.Println(string(output))
 }
 
 func main() {
