@@ -22,10 +22,12 @@ func loadDictionary(path string) {
 	}
 
 	scanner := bufio.NewScanner(f)
+	// filter dict exact same way, lowercase etc
+
 	for scanner.Scan() {
 		word := scanner.Text()
-
-		// Only save words that are longer than N character
+		word = processWord(word)
+		// Only store words that are longer than 2 characters
 		if len(word) > 2 {
 			dict = append(dict, word)
 		}
@@ -33,13 +35,8 @@ func loadDictionary(path string) {
 }
 
 // TODO: optimize algo
-// Strips non alphabetical characters and compares them with our dict
-// This means can't -> cant, it's -> its etc
-// I've added those to a custom dict.txt untill I can find a better way
 func isInDictionary(word string) bool {
-	re := regexp.MustCompile("[^a-zA-Z]")
-	word = re.ReplaceAllString(word, "")
-	word = strings.ToLower(word)
+	word = processWord(word)
 
 	for _, dWord := range dict {
 		if word == dWord {
@@ -48,6 +45,13 @@ func isInDictionary(word string) bool {
 	}
 
 	return false
+}
+
+func processWord(word string) string {
+	re := regexp.MustCompile("[^a-zA-Z]")
+	word = re.ReplaceAllString(word, "")
+	word = strings.ToLower(word)
+	return word
 }
 
 // regular text has more alpha than non-alpha
@@ -115,11 +119,9 @@ func processImage(path string) string {
 
 func main() {
 	loadDictionary("/usr/share/dict/words")
-	loadDictionary("/Users/markmulder/sources/go/src/github.com/bittersweet/ocrimages/dict.txt")
 
 	processImage(os.Args[1])
-
-	// images := util.LoadImagesFromDir("without")
+	// images := util.LoadImagesFromDir("text")
 	// for _, image := range images {
 	// 	processImage(image)
 	// }
