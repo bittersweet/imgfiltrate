@@ -13,7 +13,7 @@ import (
 )
 
 // Global var that holds the dictionary
-var dict []string
+var dict = make(map[string]string)
 
 func loadDictionary(path string) {
 	f, err := os.Open(path)
@@ -28,22 +28,16 @@ func loadDictionary(path string) {
 		word = processWord(word)
 		// Only store words that are longer than 2 characters
 		if len(word) > 2 {
-			dict = append(dict, word)
+			dict[word] = ""
 		}
 	}
 }
 
-// TODO: optimize algo
 func isInDictionary(word string) bool {
 	word = processWord(word)
 
-	for _, dWord := range dict {
-		if word == dWord {
-			return true
-		}
-	}
-
-	return false
+	_, ok := dict[word]
+	return ok
 }
 
 func processWord(word string) string {
