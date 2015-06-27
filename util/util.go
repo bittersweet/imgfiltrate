@@ -22,3 +22,7 @@ func Log(in string) {
 		fmt.Println(in)
 	}
 }
+
+func IsDirectInput() bool {
+	return len(os.Args) > 1
+}
