@@ -81,10 +81,11 @@ func analyzeWords(words []string) (int, int) {
 	return alpha, nonAlpha
 }
 
-func ProcessImage(path string) (int, int, int) {
+func ProcessImage(path string) (int, int, int, int) {
 	loadDictionary("/usr/share/dict/words")
 
 	text := gosseract.Must(gosseract.Params{Src: path})
+	totalCharacters := len(text)
 	text = strings.TrimSpace(text)
 	words := strings.Fields(text)
 
@@ -97,15 +98,15 @@ func ProcessImage(path string) (int, int, int) {
 		util.Log("hasMoreAlphaCharacters")
 	}
 
+	dictionaryWords := 0
 	for _, word := range words {
 		if hasMoreAlpha {
 			if isInDictionary(word) {
+				dictionaryWords++
 				util.Log(fmt.Sprintf("isInDictionary: %s\n", word))
 			}
 		}
 	}
 
-	total := alpha + nonAlpha
-
-	return alpha, nonAlpha, total
+	return alpha, nonAlpha, totalCharacters, dictionaryWords
 }

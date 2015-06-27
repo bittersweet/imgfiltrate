@@ -14,11 +14,12 @@ type Result struct {
 	AlphabeticCharacters    int
 	NonAlphabeticCharacters int
 	TotalCharacters         int
+	DictionaryWords         int
 	Advice                  string
 }
 
 func processImage(file string) Result {
-	alpha, nonAlpha, total := ocr.ProcessImage(file)
+	alpha, nonAlpha, totalCharacters, dictionaryWords := ocr.ProcessImage(file)
 	pct, totalColors := color.ProcessImage(file)
 
 	r := Result{
@@ -26,14 +27,27 @@ func processImage(file string) Result {
 		TotalColors:             totalColors,
 		AlphabeticCharacters:    alpha,
 		NonAlphabeticCharacters: nonAlpha,
-		TotalCharacters:         total,
+		TotalCharacters:         totalCharacters,
+		DictionaryWords:         dictionaryWords,
 	}
 
 	return r
 }
 
 func (r *Result) advise() {
-	r.Advice = "BAD"
+	if r.DictionaryWords > 0 {
+		r.Advice = "BAD"
+		return
+	}
+
+	if r.AlphabeticCharacters > r.NonAlphabeticCharacters && r.AlphabeticCharacters > 10 {
+		r.Advice = "BAD"
+		return
+	}
+
+	// TODO: Take ColorPercentage into account
+
+	r.Advice = "GOOD"
 }
 
 func (r *Result) output() {
@@ -46,8 +60,11 @@ func main() {
 	r.advise()
 	r.output()
 
-	// images := util.LoadImagesFromDir("text")
+	// images := util.LoadImagesFromDir("without")
 	// for _, image := range images {
-	// 	processImage(image)
+	// 	fmt.Println("processing", image)
+	// 	r := processImage(image)
+	// 	r.advise()
+	// 	r.output()
 	// }
 }
