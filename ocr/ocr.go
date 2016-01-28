@@ -15,6 +15,10 @@ import (
 // Global var that holds the dictionary
 var dict = make(map[string]string)
 
+// Regexp to remove non alphabetical characters, there are only
+// 2 in the dict but this is for user input as well
+var re = regexp.MustCompile("[^a-zA-Z]")
+
 func loadDictionary(path string) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -25,7 +29,7 @@ func loadDictionary(path string) {
 
 	for scanner.Scan() {
 		word := scanner.Text()
-		word = processWord(word)
+		word = strings.ToLower(word)
 		// Only store words that are longer than 2 characters
 		if len(word) > 2 {
 			dict[word] = ""
@@ -34,17 +38,11 @@ func loadDictionary(path string) {
 }
 
 func isInDictionary(word string) bool {
-	word = processWord(word)
+	word = re.ReplaceAllString(word, "")
+	word = strings.ToLower(word)
 
 	_, ok := dict[word]
 	return ok
-}
-
-func processWord(word string) string {
-	re := regexp.MustCompile("[^a-zA-Z]")
-	word = re.ReplaceAllString(word, "")
-	word = strings.ToLower(word)
-	return word
 }
 
 // regular text has more alpha than non-alpha
