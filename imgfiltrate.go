@@ -66,12 +66,4 @@ func main() {
 	r := processImage(file)
 	r.advise()
 	r.output()
-
-	// images := util.LoadImagesFromDir("without")
-	// for _, image := range images {
-	// 	fmt.Println("processing", image)
-	// 	r := processImage(image)
-	// 	r.advise()
-	// 	r.output()
-	// }
 }
