@@ -18,7 +18,7 @@ func convertColorToHex(c color.Color) string {
 	return RGBToHex(uint8(r>>8), uint8(g>>8), uint8(b>>8))
 }
 
-func ProcessImage(filename string) (float64, float64) {
+func ProcessImage(filename string) (float64, int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -58,6 +58,8 @@ func ProcessImage(filename string) (float64, float64) {
 		}
 	}
 
+	uniqueColors := len(colormap)
+
 	percentage := float64(highest) / float64(total) * 100
-	return percentage, float64(total)
+	return percentage, uniqueColors
 }

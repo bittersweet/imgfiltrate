@@ -12,7 +12,7 @@ import (
 
 type Result struct {
 	ColorPercentage         float64 `json:"color_percentage"`
-	TotalColors             float64 `json:"total_colors"`
+	TotalColors             int     `json:"total_colors"`
 	AlphabeticCharacters    int     `json:"alphabetic_characters"`
 	NonAlphabeticCharacters int     `json:"non_alphabetic_characters"`
 	TotalCharacters         int     `json:"total_characters"`
