@@ -34,12 +34,25 @@ func ProcessImage(filename string) (float64, int) {
 	total := 0
 	colormap := make(map[color.Color]int)
 
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+	// fmt.Printf("min.y: %d max.y: %d", bounds.Min.Y, bounds.Max.Y)
+
+	// We only care about the center 80%, so slice of 10% of the beginning and
+	// end
+
+	pctY := bounds.Max.Y / 100
+	startY := 10 * pctY
+	endY := 90 * pctY
+
+	pctX := bounds.Max.X / 100
+	startX := 10 * pctX
+	endX := 90 * pctX
+
+	for y := startY; y < endY; y++ {
 		if y%2 == 0 {
 			y++
 		}
 
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+		for x := startX; x < endX; x++ {
 			if x%2 == 0 {
 				x++
 			}
