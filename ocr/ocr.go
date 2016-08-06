@@ -76,7 +76,10 @@ func analyzeWords(words []string) (int, int) {
 func ProcessImage(path string) (int, int, int, int) {
 	loadDictionary("/usr/share/dict/words")
 
-	text := gosseract.Must(gosseract.Params{Src: path})
+	text := gosseract.Must(gosseract.Params{
+		Src:       path,
+		Languages: "eng",
+	})
 	totalCharacters := len(text)
 	text = strings.TrimSpace(text)
 	words := strings.Fields(text)
