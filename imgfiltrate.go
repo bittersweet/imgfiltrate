@@ -33,7 +33,7 @@ func getPrediction(file string) (string, string) {
 	}
 
 	client := &http.Client{}
-	req, _ := http.NewRequest("POST", "http://localhost:5000/predict_data", bytes.NewBuffer(fContent))
+	req, _ := http.NewRequest("POST", "http://localhost:5000/predict", bytes.NewBuffer(fContent))
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal("error in client do ", err)
