@@ -6,8 +6,8 @@ import (
 	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
+	"io"
 	"log"
-	"os"
 )
 
 func RGBToHex(r, g, b uint8) string {
@@ -19,14 +19,8 @@ func convertColorToHex(c color.Color) string {
 	return RGBToHex(uint8(r>>8), uint8(g>>8), uint8(b>>8))
 }
 
-func ProcessImage(filename string) (float64, int) {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	m, _, err := image.Decode(file)
+func ProcessImage(contents io.Reader) (float64, int) {
+	m, _, err := image.Decode(contents)
 	if err != nil {
 		log.Fatal(err)
 	}
