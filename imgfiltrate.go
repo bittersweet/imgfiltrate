@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/bittersweet/imgfiltrate/color"
 )
@@ -51,8 +52,11 @@ func getRemoteFile(location string) *bytes.Buffer {
 }
 
 func getPrediction(contents io.Reader) (string, string) {
+	hostname := os.Getenv("IMGFILTRATE_HOSTNAME")
+	path := fmt.Sprintf("%s/predict", hostname)
+
 	client := &http.Client{}
-	req, _ := http.NewRequest("POST", "http://192.168.2.7:5000/predict", contents)
+	req, _ := http.NewRequest("POST", path, contents)
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal("error in client do ", err)
