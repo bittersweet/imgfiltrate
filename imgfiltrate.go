@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"os"
 
-	"./color"
+	"github.com/bittersweet/imgfiltrate/color"
 )
 
 type Result struct {
