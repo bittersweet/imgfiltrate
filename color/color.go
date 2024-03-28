@@ -6,6 +6,7 @@ import (
 	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
+	_ "golang.org/x/image/webp"
 	"io"
 	"log"
 )
@@ -22,7 +23,7 @@ func convertColorToHex(c color.Color) string {
 func ProcessImage(contents io.Reader) (float64, int) {
 	m, _, err := image.Decode(contents)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("ProcessImage", err)
 	}
 
 	bounds := m.Bounds()
